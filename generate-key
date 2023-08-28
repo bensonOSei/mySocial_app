@@ -1,0 +1,30 @@
+<?php
+
+// generate a secret key for the application
+// and store it in the .env file
+
+$secretKey = bin2hex(random_bytes(32));
+
+$env = file_get_contents('.env');
+
+// replace the secret key placeholder with the generated key
+// and write the new .env file
+// loop through the .env file and replace the secret key placeholder
+// with the generated key
+
+
+try {
+    $stream = fopen('.env', 'w');
+    foreach (explode("\n", $env) as $line) {
+        if (strpos($line, 'APP_KEY') !== false) {
+            $line = 'APP_KEY="' . $secretKey . '"';
+        }
+        fwrite($stream, $line . "\n");
+    }
+
+    echo 'Secret key generated successfully';
+} catch (Exception $e) {
+    echo $e->getMessage();
+} finally {
+    fclose($stream);
+}
